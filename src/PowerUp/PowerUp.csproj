@@ -16,6 +16,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<None Include="..\..\README.md">
+		<Pack>True</Pack>
+		<PackagePath>\</PackagePath>
+	</None>	  
+	<PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.11.0">
+		<PrivateAssets>all</PrivateAssets>
+		<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>	
+	
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
