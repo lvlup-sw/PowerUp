@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using PowerUp.Caching.Interfaces;
+using System.Collections;
 using System.Collections.Concurrent;
 
 namespace PowerUp.Caching
@@ -9,7 +10,7 @@ namespace PowerUp.Caching
     /// <remarks>
     /// This class utilizes a <see cref="ConcurrentDictionary{TKey, TValue}"/> behind the scenes.
     /// </remarks> 
-    public class FastMemCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, IDisposable where TKey : notnull
+    public class FastMemCache<TKey, TValue> : IFastMemCache<TKey, TValue> where TKey : notnull
     {
         private readonly ConcurrentDictionary<TKey, TtlValue> _dict = new();
 
