@@ -1,9 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<PackageId>lvlup.PowerUp</PackageId>
+	<Title>PowerUp</Title>
+	<Version>1.0.0</Version>
+	<Authors>lvlup; rsalus</Authors>
+	<Description>PowerUp offers a curated selection of essential utilities and extensions designed to extend common functionality and simplify complex operations.</Description>
+	<PackageProjectUrl>https://github.com/lvlup-sw/PowerUp</PackageProjectUrl>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageTags>Hashing;Cache;Caching;Sorting;Algorithms;ASP.NET;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

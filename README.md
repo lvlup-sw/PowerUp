@@ -19,23 +19,23 @@ PowerUp offers a curated selection of essential utilities and extensions designe
 2. **Usage:**
 Here are some examples of how to use "PowerUp" in your C# projects:
 
-```csharp
-using PowerUp;
+    ```csharp
+    using PowerUp;
 
-// Sorting an array using QuickSort
-List<long> numbers = [5, 2, 9, 1, 7];
-numbers.QuickSort();
+    // Sorting an array using QuickSort
+    List<long> numbers = [5, 2, 9, 1, 7];
+    numbers.QuickSort();
 
-// Generating a cache key hash
-MyDataModel data = new();
-string key = "myCacheKey";
-string hash = CacheKeyGenerator.GenerateCacheKey(data, key);
+    // Generating a cache key hash
+    MyDataModel data = new();
+    string key = "myCacheKey";
+    string hash = CacheKeyGenerator.GenerateCacheKey(data, key);
 
-// Using the in-memory cache
-var cache = new FastMemCache<int, int>();
-cache.AddOrUpdate(42, 42, TimeSpan.FromMilliseconds(100));
-int cachedValue = cache.TryGet(42, out i);
-```
+    // Using the in-memory cache
+    var cache = new FastMemCache<int, int>();
+    cache.AddOrUpdate(42, 42, TimeSpan.FromMilliseconds(100));
+    int cachedValue = cache.TryGet(42, out i);
+    ```
 
 ## License
 
