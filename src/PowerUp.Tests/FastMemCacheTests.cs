@@ -1,4 +1,4 @@
-using PowerUp.Algorithms;
+using PowerUp.Caching;
 
 namespace PowerUp.Tests
 {

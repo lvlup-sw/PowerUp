@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Concurrent;
 
-namespace PowerUp.Algorithms
+namespace PowerUp.Caching
 {
     /// <summary>
     /// FastMemCache is an in-memory caching implementation based on FastCache.
@@ -162,7 +162,7 @@ namespace PowerUp.Algorithms
 
             // Check if the key exists and if the existing value is expired
             var existingValue = _dict
-                .Where(kvp => kvp.Key.Equals(key) 
+                .Where(kvp => kvp.Key.Equals(key)
                     && kvp.Value.IsExpired())
                 .FirstOrDefault();
 
@@ -252,7 +252,7 @@ namespace PowerUp.Algorithms
 
             // Value is expired, treat as not found
             if (ttlValue.IsExpired())
-            {   
+            {
                 return false;
             }
 
