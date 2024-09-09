@@ -78,45 +78,6 @@ namespace PowerUp.Tests
         }
 
         [TestMethod]
-        public void TestTryRemove()
-        {
-            var cache = new FastMemCache<string, int>();
-            cache.AddOrUpdate("42", 42, TimeSpan.FromMilliseconds(100));
-            var res = cache.TryRemove("42", out int value);
-            Assert.IsTrue(res && value == 42);
-            Assert.IsFalse(cache.TryGet("42", out _));
-
-            //now try remove non-existing item
-            res = cache.TryRemove("blabblah", out value);
-            Assert.IsFalse(res);
-            Assert.IsTrue(value == 0);
-        }
-
-        [TestMethod]
-        public async Task TestTryRemoveWithTtl()
-        {
-            var cache = new FastMemCache<string, int>();
-            cache.AddOrUpdate("42", 42, TimeSpan.FromMilliseconds(100));
-            await Task.Delay(120); //let the item expire
-
-            var res = cache.TryRemove("42", out int value);
-            Assert.IsFalse(res);
-            Assert.IsTrue(value == 0);
-        }
-
-        [TestMethod]
-        public async Task TestTryAdd()
-        {
-            var cache = new FastMemCache<string, int>();
-            Assert.IsTrue(cache.TryAdd("42", 42, TimeSpan.FromMilliseconds(100)));
-            Assert.IsFalse(cache.TryAdd("42", 42, TimeSpan.FromMilliseconds(100)));
-
-            await Task.Delay(120); //wait for it to expire
-
-            Assert.IsTrue(cache.TryAdd("42", 42, TimeSpan.FromMilliseconds(100)));
-        }
-
-        [TestMethod]
         public async Task TestGetOrAdd()
         {
             var cache = new FastMemCache<string, int>();
@@ -148,24 +109,6 @@ namespace PowerUp.Tests
             cache.Clear();
 
             Assert.IsTrue(!cache.TryGet("key", out int res));
-        }
-
-        [TestMethod]
-        public async Task TestTryAddAtomicness()
-        {
-            int i = 0;
-
-            var cache = new FastMemCache<int, int>();
-            cache.TryAdd(42, 42, TimeSpan.FromMilliseconds(50)); //add item with short TTL
-
-            await Task.Delay(100); //wait for tha value to expire
-
-            await RunConcurrently(20, () => {
-                if (cache.TryAdd(42, 42, TimeSpan.FromSeconds(1)))
-                    i++;
-            });
-
-            Assert.IsTrue(i == 1, i.ToString());
         }
 
         [TestMethod]

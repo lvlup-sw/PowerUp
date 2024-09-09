@@ -101,9 +101,9 @@ namespace PowerUp.Caching
         /// <param name="value">The data associated with the key.</param>
         /// <param name="ttl">The time-to-live (TTL) for the item, after which it will expire.</param>
         public void AddOrUpdate(TKey key, TValue value, TimeSpan ttl)
-        {
+        {   // ConcurrentDictionary is thread-safe
             var ttlValue = new TtlValue(value, ttl);
-            _dict[key] = ttlValue;
+            _dict.AddOrUpdate(key, ttlValue, (existingKey, existingValue) => ttlValue);
         }
 
         /// <summary>
@@ -148,36 +148,6 @@ namespace PowerUp.Caching
             // Found and not expired
             value = ttlValue.Value;
             return true;
-        }
-
-        /// <summary>
-        /// Attempts to add a new key-value pair to the cache.
-        /// </summary>
-        /// <param name="key">The key to add.</param>
-        /// <param name="value">The value to add.</param>
-        /// <param name="ttl">The time-to-live (TTL) for the item, after which it will expire.</param>
-        /// <returns>True if the key-value pair was successfully added; false if the key already exists.</returns>
-        public bool TryAdd(TKey key, TValue value, TimeSpan ttl)
-        {
-            var ttlValue = new TtlValue(value, ttl);
-
-            // Check if the key exists and if the existing value is expired
-            var existingValue = _dict
-                .Where(kvp => kvp.Key.Equals(key)
-                    && kvp.Value.IsExpired())
-                .FirstOrDefault();
-
-            if (existingValue.Value is not null)
-            {
-                if (_dict.TryRemove(existingValue))
-                {
-                    return _dict.TryAdd(key, ttlValue);
-                }
-                else return false;
-            }
-
-            // Either the key doesn't exist or the existing value is not expired
-            return _dict.TryAdd(key, ttlValue);
         }
 
         /// <summary>
@@ -235,31 +205,6 @@ namespace PowerUp.Caching
         /// </summary>
         /// <param name="key">The key of the item to remove.</param>
         public void Remove(TKey key) => _dict.TryRemove(key, out _);
-
-        /// <summary>
-        /// Attempts to remove the item associated with the specified key from the cache.
-        /// </summary>
-        /// <param name="key">The key of the item to remove.</param>
-        /// <param name="value">
-        /// If the key is found and the item is removed, this output parameter will contain the removed value.
-        /// Otherwise, it will contain the default value for the type.
-        /// </param>
-        public bool TryRemove(TKey key, out TValue value)
-        {
-            value = default!;
-
-            if (!_dict.TryRemove(key, out var ttlValue))
-                return false;
-
-            // Value is expired, treat as not found
-            if (ttlValue.IsExpired())
-            {
-                return false;
-            }
-
-            value = ttlValue.Value;
-            return true;
-        }
 
         /// <summary>
         /// Returns an enumerator that iterates through the non-expired key-value pairs in the cache.
