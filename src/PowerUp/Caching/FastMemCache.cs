@@ -5,7 +5,8 @@ using System.Collections.Concurrent;
 namespace PowerUp.Caching
 {
     /// <summary>
-    /// FastMemCache is an in-memory caching implementation based on FastCache.
+    /// FastMemCache is an in-memory caching implementation based on FastCache. 
+    /// It includes resource eviction based on associated Time-to-live (TTL) values.
     /// </summary>
     /// <remarks>
     /// This class utilizes a <see cref="ConcurrentDictionary{TKey, TValue}"/> behind the scenes.

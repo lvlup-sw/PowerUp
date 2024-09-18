@@ -1,6 +1,7 @@
 ﻿using PowerUp.Caching;
 using System.Buffers;
 using System.Collections.Concurrent;
+using System.Numerics;
 
 namespace PowerUp.Collections
 {
@@ -62,10 +63,16 @@ namespace PowerUp.Collections
         /// <returns>An array from the pool with a length at least equal to `minimumLength`.</returns>
         public override T[] Rent(int minimumLength)
         {
+            if (minimumLength > (1 << MaxPowOf2))
+            {
+                throw new ArgumentOutOfRangeException($"Requested array size out of range: {minimumLength}");
+            }
+
             // Check if capacity of request is within bounds
             var bucketIndex = StackArrayPool<T>.GetBucketIndex(minimumLength);
             if (bucketIndex < 0 || bucketIndex >= _bucketSizes.Length)
-            {   // Return new if out of bounds
+            {
+                // Return new if out of bounds
                 return new T[minimumLength];
             }
 
@@ -126,6 +133,21 @@ namespace PowerUp.Collections
             );
         }
 
-        private static int GetBucketIndex(int length) => (int)Math.Log(length, 2) - MinPowOf2;
+        // Since our sizing follows an exponential scale, we can calculate this based on Log2
+        internal static int GetBucketIndex(int length)
+        {
+            // Ensure length is within the valid range and is a power of 2
+            // Note we're checking the binary representation here
+            bool isValidLength = (length & (length - 1)) == 0 
+                && length >= (1 << MinPowOf2) 
+                && length <= (1 << MaxPowOf2);
+
+            if (!isValidLength) return -1;
+
+            // Calculate the bucket index 
+            int bucketIndex = BitOperations.Log2((uint)length) - MinPowOf2;
+
+            return bucketIndex;
+        }
     }
 }
